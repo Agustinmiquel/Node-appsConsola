@@ -1,0 +1,1 @@
+TOKEN:https://api.mapbox.com/geocoding/v5/mapbox.places/formos.json?proximity=ip&types=country%2Cregion&language=es&access_token=pk.eyJ1IjoiYWd1bWlxdWVsIiwiYSI6ImNsbTZ0c3Z1MTAwYnMzbHBkam9pY213MnQifQ.L3g3JwAVCoCRYCJ12QhxaA
