@@ -1,18 +1,30 @@
+const fs = require('fs'); //filesystem
 const axios = require('axios');
 
 class Busqueda {
 
-    Historial = ['Madrid', 'Cordoba', 'Buenos Aires', 'Noruega', 'Texas', 'Mexico', 'Brasil', 'Chile', 'Uruguay', 'Costa Rica','Francia','Australia']; 
+    Historial = [];
+    dbpath = './db/database.json';
 
     constructor(){
-        // leer en DB si existe
+        
     }; 
 
     get paramsApi(){
         return{
-            'access_token':'pk.eyJ1IjoiYWd1bWlxdWVsIiwiYSI6ImNsbTZ0c3Z1MTAwYnMzbHBkam9pY213MnQifQ.L3g3JwAVCoCRYCJ12QhxaA',
+            'access_token':process.env.TOKEN,
             'language':'es',
             'limit':'5'
+        }
+    };
+
+    get paramsWheater(){
+        return{
+                // lat,
+                // lon,
+                appid:process.env.OPENWEATHER_KEY,
+                units:'metric',
+                lang:'es'
         }
     };
 
@@ -28,16 +40,56 @@ class Busqueda {
             });
 
             const resp = await instance.get();
-            console.log(resp.data); 
-        
-            return []; 
-
+            return resp.data.features.map(lugar =>({
+                id: lugar.id,
+                name: lugar.place_name,
+                lat:lugar.center[0],
+                lgn:lugar.center[1],
+            }))
+            // console.log(resp.data); 
+            // return [];
         }
         catch(error) {
             return []; 
         }
         // return []; //retornar los lugares que busco la persona
     }
+
+    async climaLugar(lat, lon){
+        try{
+            //instancia de axios.create
+            const instance = axios.create({
+                baseURL: `https://api.openweathermap.org/data/2.5/weather`,
+                params: {...this.paramsWheater, lat, lon}
+            })
+
+            //res.data
+            const resp = await instance.get();
+            const {weather, main} = resp.data;
+
+            return {
+                desc: weather[0].description,
+                min: main.temp_min,
+                max: main.temp_max,
+                temp: main.temp,
+            }
+        }
+        catch(error){
+            console.log(error);
+        }
+    }
+
+    agregarHistorial(lugar = ''){
+        //prevenir duplicados
+        this.Historial.unshift(lugar);
+        //Guardar en DB
+        this.guardarDB(); 
+    }
+
+    guardarDB(){
+         fs.writeFileSync(this.dbpath, JSON.stringify(this.Historial)); 
+    }
+
 }
 
 module.exports = Busqueda; 
