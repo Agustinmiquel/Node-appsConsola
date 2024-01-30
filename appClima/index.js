@@ -33,7 +33,7 @@ const Main = async ()  => {
                 //Mostrar resultados: 
                 console.log('Informacion de la Ciudad: '.magenta);
                 console.log('Nombre: '.grey,lugarSel.name);
-                console.log('Descripcion: ',clima.desc);
+                console.log('Descripcion: '.grey,clima.desc);
                 console.log('Temperatura: '.grey,clima.temp);
                 console.log('Longitud:'.grey,lugarSel.lgn);
                 console.log('Latitud:'.grey,lugarSel.lat);

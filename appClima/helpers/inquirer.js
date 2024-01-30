@@ -136,5 +136,4 @@ module.exports = {
     leerInput,
     pausa,
     listadoLugares
-
 } 
